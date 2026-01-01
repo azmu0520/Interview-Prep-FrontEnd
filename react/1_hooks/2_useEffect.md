@@ -535,7 +535,7 @@ Render → Effect runs → Paint → (no flicker)
 
 ### Q1: When does the cleanup function run?
 
-**Model Answer:**
+**Answer:**
 
 > "The cleanup function runs in two scenarios: First, it runs before the effect executes again when dependencies change - this cleans up the previous effect before running the new one. Second, it runs when the component unmounts to clean up any subscriptions, timers, or listeners. This prevents memory leaks and ensures we don't have stale subscriptions active. A common example is cleaning up event listeners or canceling fetch requests."
 
@@ -552,7 +552,7 @@ useEffect(() => {
 
 ### Q2: Why is my effect running infinitely?
 
-**Model Answer:**
+**Answer:**
 
 > "Infinite loops in useEffect usually happen for three reasons: First, you might be missing the dependency array, causing it to run after every render. Second, you might have an object or array in the dependency array that's being recreated each render, so React sees it as a new value. Third, you might be setting state inside the effect unconditionally, which triggers a re-render, which runs the effect again. The fix is to add a proper dependency array with primitive values, or use useMemo/useCallback for stable references."
 
@@ -560,7 +560,7 @@ useEffect(() => {
 
 ### Q3: What happens if I omit the dependency array?
 
-**Model Answer:**
+**Answer:**
 
 > "Omitting the dependency array means the effect runs after every render - both the initial render and all subsequent updates. This is rarely what you want and can cause performance issues. It's different from an empty array `[]` which runs only once on mount. You should always include a dependency array - either empty for one-time effects, or with dependencies for effects that should re-run when specific values change."
 
@@ -574,7 +574,7 @@ useEffect(() => {
 
 ### Q4: How do you handle async operations in useEffect?
 
-**Model Answer:**
+**Answer:**
 
 > "You can't make useEffect itself async because it must return either nothing or a cleanup function. Instead, you define an async function inside the effect and call it immediately. For production code, you should also use an AbortController to cancel the request if the component unmounts or dependencies change, preventing state updates on unmounted components and race conditions."
 
@@ -607,7 +607,7 @@ useEffect(() => {
 
 ### Q5: What's the difference between useEffect and useLayoutEffect?
 
-**Model Answer:**
+**Answer:**
 
 > "useEffect runs asynchronously after the browser has painted, making it non-blocking and suitable for most side effects like data fetching or subscriptions. useLayoutEffect runs synchronously before the browser paints, blocking the paint until it completes. You should use useLayoutEffect only when you need to read layout from the DOM and make visual changes before the user sees them - like measuring element dimensions or preventing flicker. In 99% of cases, useEffect is the right choice."
 
@@ -615,7 +615,7 @@ useEffect(() => {
 
 ### Q6: Why do effects run twice in React 18 development mode?
 
-**Model Answer:**
+**Answer:**
 
 > "In React 18 Strict Mode, effects intentionally run twice in development to help catch bugs related to missing cleanup functions. React mounts the component, runs the effect, then immediately unmounts it (running cleanup), and remounts it again (running the effect again). This helps ensure your cleanup logic works correctly and that your effects are properly idempotent. This only happens in development mode, not in production, so it doesn't affect real users."
 
@@ -623,7 +623,7 @@ useEffect(() => {
 
 ### Q7: How do you fetch data on component mount?
 
-**Model Answer:**
+**Answer:**
 
 > "I use useEffect with an empty dependency array to fetch data once on mount. Inside the effect, I define an async function that fetches the data, handles errors, and updates state. I also use an AbortController to cancel the request if the component unmounts before the fetch completes, preventing the 'Can't perform a React state update on an unmounted component' warning."
 
@@ -664,7 +664,7 @@ useEffect(() => {
 
 ### Q8: Can you have multiple useEffect hooks in one component?
 
-**Model Answer:**
+**Answer:**
 
 > "Yes, absolutely! It's actually considered a best practice to separate concerns by using multiple useEffect hooks. Each effect should handle one specific side effect - one for data fetching, another for subscriptions, another for analytics, etc. This makes the code more readable and maintainable. The effects run in the order they're defined, and each can have its own dependencies and cleanup function."
 

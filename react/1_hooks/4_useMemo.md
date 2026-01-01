@@ -378,7 +378,7 @@ function Component({ items }) {
 
 ### Q1: What is useMemo and when should you use it?
 
-**Model Answer:**
+**Answer:**
 
 > "useMemo is a React hook that memoizes the result of a computation. It takes a function and a dependency array, runs the function on the first render, caches the result, and returns that cached result on subsequent renders unless the dependencies change. You should use it in three main scenarios: First, for expensive calculations that run on every render - things like sorting or filtering large datasets, complex mathematical operations, or recursive algorithms. Second, when you need referential equality for objects or arrays that are passed to memoized child components, to prevent unnecessary re-renders. Third, when computed values are used as dependencies in other hooks like useEffect. However, it's important to measure performance first because useMemo has its own overhead - don't use it for simple operations or premature optimization."
 
@@ -386,7 +386,7 @@ function Component({ items }) {
 
 ### Q2: What's the difference between useMemo and useCallback?
 
-**Model Answer:**
+**Answer:**
 
 > "Both are memoization hooks, but they memoize different things. useMemo memoizes a computed value - the result of running a function. useCallback memoizes the function itself. In fact, useCallback is just syntactic sugar - `useCallback(fn, deps)` is equivalent to `useMemo(() => fn, deps)`. Use useMemo when you have an expensive calculation and want to cache the result, like filtering or sorting a large array. Use useCallback when you need a stable function reference, typically for passing to memoized child components as props or using as dependencies in other hooks. A simple rule: useMemo for values, useCallback for functions."
 
@@ -407,7 +407,7 @@ const handleSort = useMemo(() => () => items.sort(), [items]);
 
 ### Q3: Does useMemo prevent the calculation from running completely?
 
-**Model Answer:**
+**Answer:**
 
 > "No, useMemo doesn't prevent the calculation from running - it runs on the first render and whenever dependencies change. What it does is cache the result and skip recalculation when dependencies haven't changed. This is an important distinction: if you call `useMemo(() => expensiveFunc(), [dep])`, expensiveFunc still runs every time dep changes. useMemo is not about eliminating work entirely, it's about avoiding redundant work when inputs haven't changed. Also, React reserves the right to 'forget' memoized values in certain situations to free up memory, so you can't rely on it never recalculating."
 
@@ -415,7 +415,7 @@ const handleSort = useMemo(() => () => items.sort(), [items]);
 
 ### Q4: How do dependencies work in useMemo?
 
-**Model Answer:**
+**Answer:**
 
 > "Dependencies work the same way as in useEffect and useCallback - React uses shallow comparison with Object.is to check if any dependency changed. If all dependencies are the same, React returns the cached value without re-running the computation. If any dependency changed, it re-runs the computation and caches the new result. You must include all values from the component scope that the computation uses, otherwise you'll get stale data. A common pitfall is using objects or arrays as dependencies - since they have new references on every render, the memoization becomes ineffective. The solution is to use primitive values from those objects as dependencies, or memoize the objects themselves."
 
@@ -423,7 +423,7 @@ const handleSort = useMemo(() => () => items.sort(), [items]);
 
 ### Q5: When should you NOT use useMemo?
 
-**Model Answer:**
+**Answer:**
 
 > "You shouldn't use useMemo in several situations: First, for simple calculations like basic arithmetic or string operations - the overhead of memoization is greater than just doing the calculation. Second, when you haven't measured a performance problem - premature optimization makes code harder to read without proven benefit. Third, when the computation is already fast - if it takes less than 1 millisecond, memoization probably isn't worth it. Fourth, when creating simple objects or arrays that aren't passed to memoized children - there's no benefit to memoizing them. As a rule, I prefer to write simple code first, profile for performance issues, and only add useMemo when there's evidence it will help. The React team has stated they may make useMemo unnecessary in the future through compiler optimizations."
 
@@ -431,7 +431,7 @@ const handleSort = useMemo(() => () => items.sort(), [items]);
 
 ### Q6: How does useMemo help with referential equality?
 
-**Model Answer:**
+**Answer:**
 
 > "In JavaScript, objects and arrays are compared by reference, not by value. So even if two objects have the same content, they're not equal if they're different objects in memory. This causes problems with React.memo - if you pass a new object or array to a memoized child component on every render, the child will re-render even though the content might be the same. useMemo solves this by providing a stable reference: it returns the same object or array reference until dependencies change. For example, if you're passing a config object to a memoized child, wrapping it in useMemo ensures the child only re-renders when the config actually changes, not on every parent render. This is one of the most practical uses of useMemo."
 
@@ -439,7 +439,7 @@ const handleSort = useMemo(() => () => items.sort(), [items]);
 
 ### Q7: Can you give a real-world example of when useMemo improved performance?
 
-**Model Answer:**
+**Answer:**
 
 > "Sure, I had a component rendering a data table with about 5,000 rows. Users could sort, filter, and paginate through the data. Every time anything changed in the parent component - even unrelated state like a loading spinner - the entire dataset was being filtered and sorted again, causing visible lag. I profiled with React DevTools and saw the component was taking 50-80ms to render. I added useMemo around the filtering and sorting logic with the relevant dependencies - the raw data, sort field, and filter values. After that, the expensive calculation only ran when those specific values changed, and other re-renders used the cached result. Render time dropped to under 5ms for cache hits. The key was measuring first to confirm it was worth optimizing, then targeting the specific expensive operation."
 

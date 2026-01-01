@@ -256,7 +256,7 @@ setTimeout(() => {
 
 ### Q1: Why doesn't my state update immediately after calling setState?
 
-**Model Answer:**
+**Answer:**
 
 > "State updates in React are asynchronous and batched for performance. When you call `setState`, React schedules a re-render rather than updating immediately. This allows React to batch multiple state updates together and re-render once, which is much more efficient. If you need to perform an action after the state updates, you can use `useEffect` with that state in the dependency array."
 
@@ -264,7 +264,7 @@ setTimeout(() => {
 
 ### Q2: What's the difference between `setState(value)` and `setState(prev => value)`?
 
-**Model Answer:**
+**Answer:**
 
 > "The functional update form `setState(prev => newValue)` should be used when the new state depends on the previous state. This is critical because state updates are asynchronous and batched. If you have multiple updates in quick succession, using the direct form can lead to stale state bugs where all updates use the same old value. The functional form guarantees you're working with the latest state by providing the most recent value as the `prev` parameter."
 
@@ -284,7 +284,7 @@ setCount((prev) => prev + 1);
 
 ### Q3: How do you update nested objects in state?
 
-**Model Answer:**
+**Answer:**
 
 > "You need to create a new object at each level of nesting using the spread operator. React uses shallow comparison to detect changes, so mutating a nested property won't trigger a re-render. For deeply nested state, I'd either carefully spread at each level, or consider using `useReducer` for more complex state logic, or even a library like Immer that handles immutable updates for you."
 
@@ -304,7 +304,7 @@ setUser((prev) => ({
 
 ### Q4: When should you use multiple useState vs single useState with an object?
 
-**Model Answer:**
+**Answer:**
 
 > "I use multiple `useState` hooks when the state variables are independent and updated separately. This keeps updates simple and avoids unnecessary spreading. I use a single object when the values are related and often updated together, like form fields that get submitted as one payload. The key question is: do these values have a logical relationship? If yes, group them. If no, keep them separate. For complex state with many related values, I'd also consider `useReducer`."
 
@@ -312,7 +312,7 @@ setUser((prev) => ({
 
 ### Q5: What is lazy initialization and when would you use it?
 
-**Model Answer:**
+**Answer:**
 
 > "Lazy initialization is when you pass a function to `useState` instead of calling it directly. The function only runs once during the initial render, not on every re-render. This is important for expensive operations like reading from localStorage, complex calculations, or parsing large data. Instead of `useState(expensiveFunc())` which runs on every render, you use `useState(() => expensiveFunc())` which only runs once."
 
@@ -320,7 +320,7 @@ setUser((prev) => ({
 
 ### Q6: Can you explain state batching in React 18?
 
-**Model Answer:**
+**Answer:**
 
 > "React 18 introduced automatic batching for all state updates, not just those in event handlers. This means multiple `setState` calls—even in promises, setTimeout, or native event handlers—are batched together into a single re-render for better performance. Before React 18, only updates in React event handlers were batched. This is completely automatic and transparent to developers, but it's important to use functional updates when state depends on previous state to avoid stale closure issues."
 

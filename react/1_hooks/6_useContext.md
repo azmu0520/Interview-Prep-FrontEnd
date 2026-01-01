@@ -687,7 +687,7 @@ function MouseProvider({ children }) {
 
 ### Q1: How does useContext work?
 
-**Model Answer:**
+**Answer:**
 
 > "useContext is a hook that lets you consume values from a React Context. You first create a context using createContext, which returns a context object with Provider and Consumer components. You wrap your component tree with the Provider and pass a value to it. Then, any descendant component can call useContext with that context object to access the value. The key behavior is that useContext looks up the component tree to find the nearest Provider for that context - if it doesn't find one, it uses the default value passed to createContext. When the Provider's value changes, all components that called useContext for that context will re-render, even if they only use a small part of the context value. This is the main performance consideration with Context."
 
@@ -695,7 +695,7 @@ function MouseProvider({ children }) {
 
 ### Q2: What triggers a re-render in context consumers?
 
-**Model Answer:**
+**Answer:**
 
 > "A component that uses useContext re-renders whenever the Provider's value changes, and React determines this using shallow comparison - basically Object.is comparison on the value prop. This is important because if you pass a new object or array to the Provider on every render, all consumers will re-render, even if the contents are the same. That's why it's crucial to memoize the context value using useMemo. Another key point: ALL consumers re-render when the value changes, even if they only use a small portion of the context. For example, if you have a context with user and theme, and only theme changes, components that only use user will still re-render. This is one of Context's main limitations and why you might split contexts or use more sophisticated state management for complex scenarios."
 
@@ -731,7 +731,7 @@ function App() {
 
 ### Q3: When should you use Context API vs other state management solutions?
 
-**Model Answer:**
+**Answer:**
 
 > "Context is great for relatively static, global data that many components need - things like theme, authentication, localization, or global UI state like modals. It's built into React, has zero dependencies, and is perfect for avoiding prop drilling. However, Context has limitations for complex state management: first, all consumers re-render when the value changes, even if they only use part of it. Second, there's no built-in selector mechanism to prevent this. Third, it can get messy with many contexts, leading to 'provider hell'. I'd use Context for simple global state and when performance isn't critical. For complex state with frequent updates, or when you need features like time-travel debugging, middleware, or fine-grained subscriptions, I'd reach for Redux Toolkit or Zustand. For server state, I'd use React Query or SWR. The key is picking the right tool - Context is excellent for its use cases, but it's not a replacement for all state management."
 
@@ -739,7 +739,7 @@ function App() {
 
 ### Q4: How do you optimize Context performance?
 
-**Model Answer:**
+**Answer:**
 
 > "There are several strategies for optimizing Context performance. First, always memoize the Provider value using useMemo to prevent unnecessary re-renders from object reference changes. Second, split contexts by concern - instead of one big context with user, theme, and settings, create separate contexts for each. This way, changing the theme doesn't re-render components that only care about the user. Third, split contexts by update frequency - put frequently changing data in one context and stable data in another. Fourth, you can combine Context with composition - pass children to a Provider wrapper component, and those children won't re-render when the context value changes unless they consume it. Fifth, for really performance-critical scenarios, you can combine Context with useMemo and React.memo to prevent re-renders of expensive child components. The nuclear option is to avoid Context for that data and use a state management library with selector capabilities like Zustand or Redux."
 
@@ -781,7 +781,7 @@ function AppProviders({ children }) {
 
 ### Q5: What are the differences between Context API and Redux?
 
-**Model Answer:**
+**Answer:**
 
 > "Context and Redux solve different problems, though there's some overlap. Context is built into React and is designed for passing data through the component tree without prop drilling - it's essentially dependency injection for React. Redux is a standalone state management library with a specific pattern: single store, actions, reducers, and unidirectional data flow. Key differences: Context re-renders all consumers when the value changes, while Redux has a selector mechanism for fine-grained subscriptions. Redux has middleware support for async logic, logging, and more. Redux DevTools provide time-travel debugging and state inspection. Redux has more boilerplate but also more structure and predictability. For simple apps or when you just need to avoid prop drilling, Context is perfect. For complex apps with lots of state interactions, Redux Toolkit offers better developer experience and performance. That said, many apps successfully use Context for auth and theme, then Redux for business logic, or vice versa. They're not mutually exclusive."
 
@@ -789,7 +789,7 @@ function AppProviders({ children }) {
 
 ### Q6: Can you explain context composition and when to use it?
 
-**Model Answer:**
+**Answer:**
 
 > "Context composition refers to combining multiple contexts together or using contexts in creative ways to solve problems. One pattern is splitting contexts by concern, like having separate UserContext, ThemeContext, and SettingsContext instead of one big AppContext. This improves performance because changes to one context don't affect consumers of other contexts. Another pattern is context layering, where you have a base context that provides stable data and derived contexts that compute values from it. You can also use composition to prevent unnecessary re-renders - for example, wrapping a static part of your tree in a component that doesn't consume context, so it doesn't re-render when context changes. The key principle is to think about your context boundaries carefully: what logically belongs together, what changes together, and what components need what data. Good context composition can make your app more maintainable and performant."
 
@@ -797,7 +797,7 @@ function AppProviders({ children }) {
 
 ### Q7: What's the default value in createContext and when is it used?
 
-**Model Answer:**
+**Answer:**
 
 > "The default value passed to createContext is used only when a component calls useContext but there's no matching Provider above it in the tree. This is actually pretty rare in practice - usually you want every useContext call to be inside a Provider. I typically pass undefined as the default and then create a custom hook that throws an error if the context is undefined, which helps catch bugs where I forgot to wrap a component in the Provider. Some developers use a meaningful default for unit testing, so tests can render components without Provider wrappers. The key thing to understand is that the default value is not a fallback when the Provider's value is undefined - if you render a Provider with value={undefined}, consumers get undefined, not the default. The default only applies when there's no Provider at all."
 

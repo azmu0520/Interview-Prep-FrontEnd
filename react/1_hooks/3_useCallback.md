@@ -584,7 +584,7 @@ function Dashboard({ data }) {
 
 ### Q1: What is useMemo and when should you use it?
 
-**Model Answer:**
+**Answer:**
 
 > "useMemo is a React hook that memoizes the result of a computation. It takes a function and a dependency array, runs the function only when dependencies change, and returns the cached result on subsequent renders. I use useMemo in three main scenarios: First, for expensive calculations that would be wasteful to repeat on every render - like filtering or sorting large arrays, complex mathematical operations, or processing large datasets. Second, to maintain referential equality for objects or arrays passed to memoized child components or used in dependency arrays. Without useMemo, a new object is created on every render, causing unnecessary re-renders. Third, for derived state that depends on props or state but is expensive to compute. However, I'm careful not to overuse it - useMemo has its own overhead, so I only use it when I've identified an actual performance issue or when I need stable references. For simple calculations or primitives, the memoization overhead outweighs the benefits."
 
@@ -592,7 +592,7 @@ function Dashboard({ data }) {
 
 ### Q2: What's the difference between useMemo and useCallback?
 
-**Model Answer:**
+**Answer:**
 
 > "Both hooks are for memoization, but they memoize different things. useMemo memoizes the return value of a function - it runs the function and caches the result. useCallback memoizes the function itself - it returns the same function reference across renders. You can think of it this way: `useCallback(fn, deps)` is equivalent to `useMemo(() => fn, deps)`. I use useMemo when I have an expensive calculation and want to cache the computed value. I use useCallback when I need a stable function reference, typically for passing to memoized child components or using in dependency arrays. A simple rule: useCallback for functions, useMemo for values. That said, they're solving the same underlying problem of preventing unnecessary work and re-renders through memoization."
 
@@ -619,7 +619,7 @@ const handleClick = useMemo(() => {
 
 ### Q3: Does useMemo improve performance in all cases?
 
-**Model Answer:**
+**Answer:**
 
 > "Absolutely not - useMemo has overhead and can actually hurt performance if misused. Every time React renders, it needs to check dependencies and manage the memoization cache, which takes time and memory. For cheap calculations like addition or accessing properties, the overhead of useMemo exceeds the cost of just recalculating. I only use useMemo when the computation is actually expensive - processing large arrays, complex algorithms, or when I've profiled and identified a bottleneck. Another key use case is maintaining referential equality to prevent re-renders of memoized children, but even then, the child component needs to be expensive enough to justify the optimization. My rule is to write clean code first, measure performance with React DevTools Profiler, and only add useMemo when there's evidence it helps. Premature optimization with useMemo everywhere makes code harder to read and can actually slow things down."
 
@@ -627,7 +627,7 @@ const handleClick = useMemo(() => {
 
 ### Q4: How do dependencies work in useMemo?
 
-**Model Answer:**
+**Answer:**
 
 > "Dependencies in useMemo work the same way as useEffect - React compares them using Object.is on every render. If any dependency changed, useMemo runs the computation again and caches the new result. If all dependencies are the same, it returns the cached value. The key gotcha is that Object.is uses reference comparison for objects and arrays, not deep equality. This means if you pass an object as a dependency and that object is recreated on every render (even with the same contents), useMemo will recalculate every time, defeating the purpose. That's why I either use primitive values in dependencies, or use useMemo to stabilize object dependencies first. The ESLint exhaustive-deps rule helps catch missing dependencies, but you need to understand the reference comparison behavior to use it effectively."
 
@@ -635,7 +635,7 @@ const handleClick = useMemo(() => {
 
 ### Q5: Can you explain referential equality and why it matters for useMemo?
 
-**Model Answer:**
+**Answer:**
 
 > "Referential equality is about whether two values point to the same location in memory, not whether their contents are the same. In JavaScript, `{a: 1} === {a: 1}` is false because they're different objects, even though they have identical contents. This matters for useMemo in two ways: First, when you pass objects or arrays to memoized components or use them in dependency arrays, you need stable references to prevent unnecessary work. Without useMemo, a new object is created on every render, failing the === check and causing re-renders. Second, when objects are dependencies of useMemo itself, you need to be careful - if the object is recreated every render, useMemo won't help. The solution is to either use primitive dependencies when possible, or use useMemo to stabilize object dependencies first. This is one of the trickier aspects of React optimization, and understanding reference vs value equality is crucial."
 
@@ -643,7 +643,7 @@ const handleClick = useMemo(() => {
 
 ### Q6: When would you use useMemo to prevent child component re-renders?
 
-**Model Answer:**
+**Answer:**
 
 > "I use useMemo to prevent child re-renders when three conditions are met: First, the child component is wrapped in React.memo, otherwise memoizing props won't help. Second, the child is expensive to render - if it's cheap, the optimization isn't worth it. Third, I'm passing objects or arrays as props that would otherwise be recreated on every render. The pattern is: wrap the child in React.memo, use useMemo for object/array props that don't actually change, and this prevents the child from re-rendering when the parent re-renders for other reasons. For example, if I have a large data table component that only needs to update when the data changes, I'd memoize the table component with React.memo and use useMemo to maintain stable references for the columns configuration and filtered data. This optimization really shines when you have expensive children that re-render frequently for no reason."
 
@@ -651,7 +651,7 @@ const handleClick = useMemo(() => {
 
 ### Q7: What's the overhead of useMemo and when does it outweigh the benefits?
 
-**Model Answer:**
+**Answer:**
 
 > "useMemo has both computational and memory overhead. On every render, React needs to compare dependencies, manage the cache, and decide whether to return cached or recompute. This takes time and memory. For simple operations like addition, string concatenation, or accessing object properties, this overhead is greater than just doing the operation again. The break-even point depends on the operation, but as a rule of thumb, if a calculation takes less than a millisecond and happens in a component that doesn't render frequently, useMemo probably isn't worth it. The benefits outweigh the overhead when: the calculation is expensive (processing large arrays, complex algorithms), the component renders frequently, or you need referential equality for performance reasons. I measure with React DevTools Profiler before and after adding useMemo to confirm it actually helps. The key is being selective - adding useMemo everywhere makes code harder to read and can hurt performance."
 

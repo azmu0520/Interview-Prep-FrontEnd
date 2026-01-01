@@ -640,7 +640,7 @@ function App() {
 
 ### Q1: What's the difference between useRef and useState?
 
-**Model Answer:**
+**Answer:**
 
 > "The fundamental difference is that useState triggers re-renders when the state changes, while useRef doesn't. With useState, when you call setState, React re-renders the component and the new value appears in the UI. With useRef, when you change ref.current, nothing happens visually - the component doesn't re-render. Both persist values across renders, but they serve different purposes. Use useState for data that should be displayed in the UI and cause updates. Use useRef for mutable values that don't need to trigger re-renders, like timer IDs, previous values, or DOM references. Another key difference: useState updates are asynchronous and batched, while ref updates are immediate and synchronous."
 
@@ -660,7 +660,7 @@ countRef.current = 1; // No re-render, UI still shows old value
 
 ### Q2: When would you use useRef instead of state?
 
-**Model Answer:**
+**Answer:**
 
 > "I use useRef in four main scenarios: First, for accessing DOM elements directly - when I need to call methods like focus(), measure dimensions, or control media playback. Second, for storing mutable values that shouldn't trigger re-renders, like timer IDs from setInterval or setTimeout. Third, for keeping track of previous values from props or state, using the pattern where you update the ref after each render. Fourth, for storing any value that needs to persist across renders but doesn't affect what's displayed, like WebSocket connections, subscription objects, or flags that track whether a component is mounted. The key question I ask is: 'Does changing this value need to update the UI?' If no, useRef is probably the right choice."
 
@@ -668,7 +668,7 @@ countRef.current = 1; // No re-render, UI still shows old value
 
 ### Q3: How does useRef work internally / what does it return?
 
-**Model Answer:**
+**Answer:**
 
 > "useRef returns a plain JavaScript object with a single property called 'current'. React keeps this object in memory for the lifetime of the component - it creates it on the first render and returns the same object on every subsequent render. The object is mutable, so you can change ref.current at any time without triggering re-renders. When you pass a ref to a JSX element like <div ref={myRef}>, React automatically sets myRef.current to the DOM node after the element is created. The key insight is that it's just a persistent object - React doesn't do anything special when you change ref.current, which is why it doesn't trigger re-renders. You can think of it as instance variables in class components, but for functional components."
 
@@ -676,7 +676,7 @@ countRef.current = 1; // No re-render, UI still shows old value
 
 ### Q4: What is ref forwarding and why is it needed?
 
-**Model Answer:**
+**Answer:**
 
 > "Ref forwarding is a technique to pass a ref through a component to one of its children. It's needed because functional components don't have instances, so you can't attach refs to them directly. If you try to pass a ref to a functional component without forwardRef, React warns you and ignores it. By wrapping your component with forwardRef, you get access to the ref as a second parameter, and you can then pass it down to a DOM element or another component. This is essential for creating reusable component libraries where parent components need access to the underlying DOM nodes. For example, a custom Input component might need to expose focus() functionality to its parent, which requires forwarding the ref to the actual input element."
 
@@ -684,7 +684,7 @@ countRef.current = 1; // No re-render, UI still shows old value
 
 ### Q5: Can you explain a use case for storing previous values with useRef?
 
-**Model Answer:**
+**Answer:**
 
 > "A classic use case is tracking whether a value has actually changed in useEffect. Let me give you a concrete example: imagine you're fetching user data based on a userId prop, but you want to avoid refetching if the user just toggled a theme or some other unrelated state changed. You can store the previous userId in a ref and compare it in useEffect. Another common case is animations - you might want to animate only when a value increases, not decreases. By storing the previous value in a ref and comparing it with the current value, you can determine the direction of change. The pattern is: read the ref at the start of the render, use it for comparisons, then update it in a useEffect after the render completes. This gives you access to both the previous and current values during the same render cycle."
 
@@ -692,7 +692,7 @@ countRef.current = 1; // No re-render, UI still shows old value
 
 ### Q6: Why use useRef for timer IDs instead of state?
 
-**Model Answer:**
+**Answer:**
 
 > "Using state for timer IDs would be wasteful and could cause bugs. Every time you update state, React re-renders the component. Timer IDs are just numbers that you need to store so you can cancel the timer later - there's no reason to re-render just because you stored a timer ID. With useRef, you can store the ID without causing any re-renders. Additionally, using state could introduce timing bugs - when you call setState, the update isn't immediate, so if you try to clear the interval right after setting the state, you might not have the ID yet. With refs, the assignment is immediate and synchronous. It's the perfect tool for values that are 'behind the scenes' and don't affect the UI directly."
 
@@ -700,7 +700,7 @@ countRef.current = 1; // No re-render, UI still shows old value
 
 ### Q7: What are callback refs and when would you use them?
 
-**Model Answer:**
+**Answer:**
 
 > "Callback refs are an alternative to ref objects where you pass a function instead of a ref object to the ref prop. React calls your function with the DOM node when the component mounts, and calls it with null when it unmounts. They're useful when you need to do something immediately when the ref is set, without waiting for a useEffect to run. For example, measuring a DOM element's dimensions right after it mounts, or integrating with third-party libraries that expect a DOM node. Another use case is dynamic refs, like ref lists where you don't know how many refs you need upfront. The callback ref pattern gives you more control and timing precision than ref objects, but for most cases, the simpler useRef pattern is sufficient."
 

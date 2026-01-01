@@ -652,7 +652,7 @@ function Component() {
 
 ### Q1: What are the Rules of Hooks?
 
-**Model Answer:**
+**Answer:**
 
 > "There are two main rules of hooks that must be followed: First, only call hooks at the top level of your component or custom hook - never inside loops, conditions, or nested functions. This ensures React can track hook state correctly by maintaining a consistent order of hook calls across renders. Second, only call hooks from React function components or custom hooks - not from regular JavaScript functions or class components. Additionally, there's a naming convention that custom hooks must start with 'use' so React and linters can identify them. These rules exist because React relies on the order of hook calls to preserve state between renders, using an internal index-based system. Breaking these rules leads to bugs where state gets mismatched or lost."
 
@@ -660,7 +660,7 @@ function Component() {
 
 ### Q2: Why can't you call hooks conditionally?
 
-**Model Answer:**
+**Answer:**
 
 > "React uses the order of hook calls to track which piece of state belongs to which hook. Internally, React maintains an array of hooks for each component, indexed by the order they're called. If you call hooks conditionally, the order changes between renders - sometimes a hook is called, sometimes it isn't. This causes React to mismatch state: it might try to give useState the value from a useEffect, or vice versa. For example, if you have useState, then conditional useState, then useEffect, React's indices get confused when the condition changes. Instead of calling hooks conditionally, you should always call them at the top level and put conditional logic inside the hook body."
 
@@ -691,7 +691,7 @@ function Component({ show }) {
 
 ### Q3: What happens if you break the Rules of Hooks?
 
-**Model Answer:**
+**Answer:**
 
 > "Breaking the rules of hooks leads to serious bugs that are hard to debug. If you call hooks conditionally or in the wrong order, React's internal state tracking breaks down. You might see state values from one hook appearing in another, components not updating when they should, or getting completely unexpected values. In development, React will throw warnings or errors, but in production, you'll get subtle bugs where component state is corrupted. The symptoms can be confusing: a counter that doesn't increment, a form that loses data, or effects that don't run. The ESLint plugin for hooks is essential because it catches these mistakes before runtime."
 
@@ -699,7 +699,7 @@ function Component({ show }) {
 
 ### Q4: How do you create a custom hook?
 
-**Model Answer:**
+**Answer:**
 
 > "A custom hook is just a JavaScript function whose name starts with 'use' and that can call other hooks. The naming convention is critical - it tells React and linters that this function follows the rules of hooks. Inside, you can use any built-in hooks like useState, useEffect, etc., and the same rules apply. Custom hooks are for extracting reusable stateful logic. For example, if multiple components need to fetch user data, I'd create a useUser hook that encapsulates the useState for loading state, the useEffect for fetching, and returns the user data. The key is that custom hooks let you share logic without sharing state - each component that uses the hook gets its own independent state."
 
@@ -735,7 +735,7 @@ function Profile({ userId }) {
 
 ### Q5: Why must custom hooks start with "use"?
 
-**Model Answer:**
+**Answer:**
 
 > "The 'use' prefix is a convention that serves multiple purposes. First, it signals to React that this function might call other hooks, so the rules of hooks apply. Second, and more practically, it allows the ESLint plugin to automatically check that the rules of hooks are followed inside that function. Without the 'use' prefix, ESLint won't know to enforce hook rules, and you might break them without getting warnings. Third, it makes code more readable - when you see a function starting with 'use', you immediately know it's stateful and might have effects. It's a simple convention that enables powerful tooling and clear code communication."
 
@@ -743,7 +743,7 @@ function Profile({ userId }) {
 
 ### Q6: Can you use hooks in a class component?
 
-**Model Answer:**
+**Answer:**
 
 > "No, you cannot use hooks directly in class components. Hooks are specifically designed for function components and rely on React's function component rendering model. Class components have their own state management with this.state and lifecycle methods like componentDidMount. If you need to use hook-based logic in a class component, you have two options: First, refactor the class component to a function component, which is usually the better choice. Second, you can create a function component that uses the hooks and render it as a child or wrapper of the class component, passing data via props. However, this is more of a migration strategy than a long-term solution. The React team has indicated that function components with hooks are the future, and new features will focus on them."
 

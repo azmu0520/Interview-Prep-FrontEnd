@@ -757,7 +757,7 @@ function UserProfile({ userId }) {
 
 ### Q1: What are custom hooks and why would you create one?
 
-**Model Answer:**
+**Answer:**
 
 > "Custom hooks are JavaScript functions that use React hooks and follow the naming convention of starting with 'use'. They allow you to extract and reuse stateful logic between components without changing the component hierarchy. I create custom hooks when I find myself duplicating the same logic across multiple components - things like data fetching, form handling, subscriptions, or animations. The key insight is that custom hooks share logic, not state - each component that uses a custom hook gets its own independent state. For example, if I have multiple components fetching data with the same loading and error handling patterns, I'd extract that into a useFetch hook. This makes the code more maintainable, testable, and follows the DRY principle. Custom hooks are one of React's most powerful features for code reuse."
 
@@ -765,7 +765,7 @@ function UserProfile({ userId }) {
 
 ### Q2: What are the rules for custom hooks?
 
-**Model Answer:**
+**Answer:**
 
 > "Custom hooks must follow the same Rules of Hooks as built-in hooks. First, they must start with 'use' - this isn't just convention, it's required for React and ESLint to enforce the rules. Second, they can only be called at the top level - no loops, conditions, or nested functions. Third, they can only be called from React function components or other custom hooks, not from regular JavaScript functions. Fourth, all hooks must be called in the same order on every render. Additionally, custom hooks should include all necessary dependencies in useEffect, useMemo, and useCallback dependency arrays. These rules ensure React can properly track state and effects. The 'use' prefix is particularly important because without it, ESLint won't check for rule violations, making bugs much harder to catch."
 
@@ -773,7 +773,7 @@ function UserProfile({ userId }) {
 
 ### Q3: How do you decide between returning an array vs an object from a custom hook?
 
-**Model Answer:**
+**Answer:**
 
 > "I use arrays when the custom hook returns 2-3 values and follows a pattern similar to useState, where users are likely to rename the values. Arrays work well because of destructuring - users can name the values whatever they want. I use objects when returning 4 or more values, or when the values have clear, descriptive names that shouldn't be positional. Objects are better for extensibility - I can add new properties later without breaking existing code. For example, useState returns an array [value, setValue] because it's simple and users want to name it themselves. But a useFetch hook should return an object {data, loading, error, refetch} because there are multiple values with specific meanings, and users can pick only what they need. The key is considering the API from the consumer's perspective - what's most intuitive and flexible?"
 
@@ -781,7 +781,7 @@ function UserProfile({ userId }) {
 
 ### Q4: Can you explain how custom hooks share logic but not state?
 
-**Model Answer:**
+**Answer:**
 
 > "This is a crucial concept - each time you call a custom hook, you get completely independent state. Think of a custom hook as a function that returns fresh state and logic each time it's called, similar to calling useState multiple times. For example, if I have a useCounter custom hook and call it in two components, each component gets its own separate count state. They're not sharing the count - they're sharing the logic for how to manage a counter. This is different from something like Context, which does share state. If you want to share state between components, you'd combine custom hooks with Context - the custom hook could consume a context, or you could create a Provider component that uses custom hooks internally. The composability is powerful - custom hooks for logic reuse, Context for state sharing."
 
@@ -789,7 +789,7 @@ function UserProfile({ userId }) {
 
 ### Q5: What's the difference between a custom hook and a regular helper function?
 
-**Model Answer:**
+**Answer:**
 
 > "The key difference is that custom hooks can use React hooks, while regular functions cannot. A custom hook can call useState, useEffect, useContext, and other hooks to manage state, side effects, and context. A regular helper function is just for pure logic without state or effects. For example, a function that formats a date is a regular helper - it doesn't need hooks. But a function that fetches data and manages loading/error states needs useState and useEffect, so it must be a custom hook. Another difference is the naming - custom hooks must start with 'use' so React can enforce the Rules of Hooks. I use custom hooks when I need stateful logic that's reusable across components. I use regular functions for pure computations, transformations, or utilities that don't involve React state or side effects."
 
@@ -797,7 +797,7 @@ function UserProfile({ userId }) {
 
 ### Q6: How do you test custom hooks?
 
-**Model Answer:**
+**Answer:**
 
 > "Testing custom hooks requires special handling because hooks can only be called inside React components. I use React Testing Library's renderHook utility from @testing-library/react-hooks. It lets you render a hook in a test component and interact with it. For example, to test a useCounter hook, I'd use renderHook, then call act() to trigger updates, and assert on the result. Here's the pattern: renderHook returns a result object that contains the current return value of the hook. When I call result.current.increment wrapped in act(), I can then assert that result.current.count increased. For hooks that use effects, I need to use waitFor or waitForNextUpdate to handle asynchronous updates. I also test that the hook properly cleans up effects on unmount. The key is testing the hook's behavior as a black box - verify the API works correctly without testing implementation details."
 
@@ -823,7 +823,7 @@ test("useCounter increments", () => {
 
 ### Q7: When should you NOT create a custom hook?
 
-**Model Answer:**
+**Answer:**
 
 > "I don't create a custom hook when the logic is used in only one place - that's premature abstraction. Extract hooks when you find duplication, not before. I also don't create hooks for logic that doesn't involve React hooks - if it's just pure functions or calculations, a regular helper function is better. Another time to avoid custom hooks is when the abstraction would hide too much complexity or make debugging harder. Sometimes inline code is clearer than an abstraction. Finally, I don't create hooks for every single piece of state management - sometimes just useState is fine. The rule I follow is: start simple with built-in hooks, refactor to custom hooks when you see patterns repeated across 2-3 components. Custom hooks should make code more readable and maintainable, not more abstract and complex."
 

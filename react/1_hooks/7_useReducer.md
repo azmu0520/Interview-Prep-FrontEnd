@@ -875,7 +875,7 @@ function App() {
 
 ### Q1: When would you use useReducer instead of useState?
 
-**Model Answer:**
+**Answer:**
 
 > "I use useReducer instead of useState in four main scenarios. First, when I have complex state that contains multiple sub-values - like a form with values, errors, touched fields, and submission status. With useState, I'd need multiple state variables and keep them in sync; with useReducer, I can manage them together in one place. Second, when the next state depends on the previous state in complex ways - useReducer makes this more explicit and predictable. Third, when I have multiple related state transitions - for example, fetching data involves setting loading, handling success, and handling errors. Fourth, when I want to optimize performance by passing dispatch down instead of callback functions, since dispatch identity is stable. That said, I don't reach for useReducer immediately - I start with useState and refactor to useReducer when the complexity justifies it. The key is recognizing when state logic is becoming hard to manage with simple setState calls."
 
@@ -883,7 +883,7 @@ function App() {
 
 ### Q2: What is a reducer function and what are its requirements?
 
-**Model Answer:**
+**Answer:**
 
 > "A reducer is a pure function that takes the current state and an action, and returns the next state - it's expressed as (state, action) => newState. The term comes from array reduce functions, but in React it means reducing actions into state changes. A reducer has strict requirements: First, it must be a pure function, meaning same inputs always produce the same outputs with no side effects. Second, it must never mutate the state directly - always return a new state object or array. Third, it should not perform side effects like API calls, random number generation, or Date.now() calls. Fourth, it should handle all possible action types, typically using a switch statement, and include a default case. These requirements make reducers predictable and easy to test - you can call a reducer with specific state and action, and always get the same result. Any side effects like API calls should happen in the component before dispatching an action, not in the reducer itself."
 
@@ -891,7 +891,7 @@ function App() {
 
 ### Q3: How does useReducer work internally?
 
-**Model Answer:**
+**Answer:**
 
 > "Under the hood, useReducer and useState are actually related - useState is implemented using useReducer! When you call useReducer with a reducer function and initial state, React stores that state internally and returns it along with a dispatch function. The dispatch function is stable across renders - it won't change, similar to setState from useState. When you call dispatch with an action, React calls your reducer function with the current state and that action, gets the new state back, and if it's different from the current state (using Object.is comparison), React schedules a re-render with the new state. The key insight is that the reducer function is called during the render phase, not when dispatch is called. Like useState, multiple dispatch calls in the same render are batched together. The dispatch function also has the same referential equality guarantee as setState, making it safe to pass to child components without causing re-renders."
 
@@ -899,7 +899,7 @@ function App() {
 
 ### Q4: Can you explain the difference between useReducer and Redux?
 
-**Model Answer:**
+**Answer:**
 
 > "useReducer and Redux share the same reducer pattern, but they're designed for different scales. useReducer is a React hook for local or shared component state - it's built into React, has zero dependencies, and is perfect for component-level or small-to-medium app state. Redux is a standalone library for global application state with more features: middleware for async logic and side effects, Redux DevTools for time-travel debugging and state inspection, a more opinionated structure with action creators and constants, and better performance with selector memoization. For a small app or managing state within a component tree, useReducer with Context works great. For larger apps with complex state interactions, extensive async logic, or when you need advanced debugging, Redux Toolkit is worth the added complexity. In my experience, many apps can start with useReducer and Context, and only migrate to Redux when they hit its limitations. They're complementary - you can use both in the same app for different concerns."
 
@@ -907,7 +907,7 @@ function App() {
 
 ### Q5: How do you handle async actions with useReducer?
 
-**Model Answer:**
+**Answer:**
 
 > "useReducer doesn't handle async operations directly since reducers must be pure functions. The pattern I use is to handle async operations in the component and dispatch multiple actions to track the async lifecycle. For example, when fetching data, I dispatch FETCH_START before the request, then either FETCH_SUCCESS with the data or FETCH_ERROR with the error. This gives me clear state transitions and lets me track loading and error states. Here's the pattern: In the component, I have an async function that dispatches actions. Before the async operation, I dispatch an action to set loading state. Then I await the async operation, and dispatch success or error actions based on the result. The reducer handles these actions by updating loading, data, and error states appropriately. For more complex scenarios, you could create custom hooks that encapsulate this pattern, or use libraries like Redux Thunk if you're using Redux. The key principle is: side effects in components, pure state transitions in reducers."
 
@@ -939,7 +939,7 @@ case 'FETCH_ERROR':
 
 ### Q6: What are action creators and why would you use them?
 
-**Model Answer:**
+**Answer:**
 
 > "Action creators are functions that create and return action objects. Instead of writing action objects inline every time you dispatch, you encapsulate the action structure in a function. This has several benefits: First, it prevents typos in action types - you define the type once in the action creator. Second, it encapsulates action structure - if you need to add properties or change the payload format, you change it in one place. Third, it makes the dispatch calls cleaner and more readable. Fourth, it enables action logic - you can generate IDs, format data, or add timestamps in the action creator. Fifth, it's easier to test - you can test action creators independently. In TypeScript projects, action creators help with type safety by ensuring actions have the correct shape. I typically create action creators when an action has complex payload logic, is used in multiple places, or when I want better type safety. For simple actions with no payload, inline dispatch calls are fine."
 
@@ -947,7 +947,7 @@ case 'FETCH_ERROR':
 
 ### Q7: How do you test reducers?
 
-**Model Answer:**
+**Answer:**
 
 > "Testing reducers is straightforward because they're pure functions - you just call them with specific state and action inputs, and assert the output. I typically write tests for each action type: First, test the initial state by calling the reducer with undefined state and an init action. Then for each action type, I create a test that starts with a known state, dispatches the action, and asserts the resulting state. I also test edge cases like unknown action types, empty arrays, or missing payload properties. The beauty of pure functions is there's no mocking required - no API calls, no timers, no context. I can test every branch and edge case easily. I also test that reducers don't mutate state by freezing the input state in development. For complex reducers, I might test multiple actions in sequence to verify state flows correctly. Tools like Jest make this simple with snapshot testing too - I can capture the entire state tree and be notified of any changes. The testability of reducers is one of their major advantages over scattered setState logic."
 
