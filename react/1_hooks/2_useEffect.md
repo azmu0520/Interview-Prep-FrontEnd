@@ -1,6 +1,6 @@
 # useEffect - Complete Interview Guide
 
-## 🎯 Key Concepts You Must Understand
+## 🎯 Key Concepts
 
 ### 1. Effect Execution Timing
 
@@ -724,101 +724,24 @@ useEffect(() => {
 
 ### ✅ Must Know (Will definitely be asked)
 
-- [ ] When effects run (after paint)
-- [ ] How dependency array works (shallow comparison)
-- [ ] Purpose and timing of cleanup functions
-- [ ] How to handle async operations
-- [ ] Common infinite loop causes
+- ✅ When effects run (after paint)
+- ✅ How dependency array works (shallow comparison)
+- ✅ Purpose and timing of cleanup functions
+- ✅ How to handle async operations
+- ✅ Common infinite loop causes
 
 ### ✅ Should Know (Often asked)
 
-- [ ] Running effects once (empty array)
-- [ ] Effect execution order
-- [ ] Why effects run twice in Strict Mode
-- [ ] Difference from useLayoutEffect
-- [ ] Best practices for data fetching
+- ✅ Running effects once (empty array)
+- ✅ Effect execution order
+- ✅ Why effects run twice in Strict Mode
+- ✅ Difference from useLayoutEffect
+- ✅ Best practices for data fetching
 
 ### ✅ Nice to Know (Senior level)
 
 - [ ] Race condition handling
-- [ ] AbortController usage
+- ✅ AbortController usage
 - [ ] Performance optimization strategies
 - [ ] Custom hooks with effects
 - [ ] Effect dependency optimization
-
----
-
-## 💡 Pro Tips for Interviews
-
-1. **Always mention cleanup**: When discussing effects, show you understand cleanup prevents memory leaks
-
-2. **Know the timing**: Be clear that useEffect runs after paint, not before
-
-3. **Dependency array mastery**: Explain shallow comparison and why objects/arrays are tricky
-
-4. **Real-world examples**: Have stories about debugging infinite loops or implementing data fetching
-
-5. **Show best practices**: Mention AbortController, error handling, loading states
-
-6. **Compare to class components**: If asked, mention componentDidMount, componentDidUpdate, componentWillUnmount
-
----
-
-## 📚 Quick Reference - Common Patterns
-
-```javascript
-// Run once on mount
-useEffect(() => {
-  // Setup
-  return () => {
-    // Cleanup
-  };
-}, []);
-
-// Run when dependency changes
-useEffect(() => {
-  // Effect
-}, [dependency]);
-
-// Data fetching with cleanup
-useEffect(() => {
-  const controller = new AbortController();
-
-  fetch(url, { signal: controller.signal })
-    .then((res) => res.json())
-    .then(setData);
-
-  return () => controller.abort();
-}, [url]);
-
-// Event listener with cleanup
-useEffect(() => {
-  const handler = () => console.log("clicked");
-  window.addEventListener("click", handler);
-  return () => window.removeEventListener("click", handler);
-}, []);
-
-// Timer with cleanup
-useEffect(() => {
-  const timer = setTimeout(() => console.log("Hello"), 1000);
-  return () => clearTimeout(timer);
-}, []);
-
-// Subscription with cleanup
-useEffect(() => {
-  const subscription = observable.subscribe();
-  return () => subscription.unsubscribe();
-}, []);
-```
-
----
-
-## 🎯 Mental Model
-
-Think of useEffect as: **"When something changes, do something, and clean up when done"**
-
-- **When**: Dependencies change (or mount)
-- **Do**: Your side effect
-- **Clean up**: Prevent leaks and stale behavior
-
-**Remember:** Effects are for synchronizing with external systems (APIs, DOM, subscriptions), not for transforming data (use regular functions or useMemo for that).
