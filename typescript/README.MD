@@ -1416,10 +1416,10 @@ declare module "express" {
 
 ### Fundamentals
 
-- [ ] Master all basic types
-- [ ] Understand interfaces vs types
-- [ ] Practice with functions and objects
-- [ ] Get comfortable with unions and intersections
+- ✅ Master all basic types
+- ✅ Understand interfaces vs types
+- ✅ Practice with functions and objects
+- ✅ Get comfortable with unions and intersections
 
 ### Advanced Types
 
